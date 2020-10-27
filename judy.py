@@ -3,6 +3,15 @@ import time
 import speech_recognition as sr
 import playsound
 from gtts import gTTS
+import random
+from assistant_commands import *
+
+
+playsound.playsound("audio/greeting_show_commands.mp3")
+commands_dict = {"привет": greetings, "открой браузер": open_browser,
+                 "закрой браузер": close_browser, "открой": open_asked,
+                 "закрой": close_asked, "спасибо": say_thanks,
+                 "команды": show_commands, "пока": bye}
 
 
 def speak(text):
@@ -25,27 +34,14 @@ def get_audio():
     return said
 
 
-playsound.playsound("audio/greetings.mp3")
+text = ""
 
-
-while True:
+while text != "пока":
     text = get_audio().lower()
-
-    if "привет" in text:
-        playsound.playsound("audio/greetings.mp3")
-    elif "открой браузер" in text:
-        try:
-            os.startfile("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe")
-            playsound.playsound("audio/open_browser.mp3")
-        except Exception as e:
-            print('Exception: ' + str(e))
-    elif "закрой браузер" in text:
-        try:
-            os.system('TASKKILL /F /IM  chrome.exe')
-            playsound.playsound("audio/close_browser.mp3")
-        except Exception as e:
-            print('Exception: ' + str(e))
-    elif "пока" in text:
-        playsound.playsound("audio/already_leaving.mp3")
-        playsound.playsound("audio/eh_okay.mp3")
-        break
+    for name, event in commands_dict.items():
+        if name in text:
+            try:
+                event()
+                break
+            except Exception as e:
+                print('Exception: ' + str(e))

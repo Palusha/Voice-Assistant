@@ -1,3 +1,4 @@
 local/
 audio/
 .idea/
+__pycache__/
